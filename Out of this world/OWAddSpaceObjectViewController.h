@@ -13,7 +13,7 @@
 
 @required
 
--(void)addSpaceObject:(OWSpaceObject *)spaceObject;
+-(void)addSpaceObject;
 -(void)didCancel;
 
 @end
