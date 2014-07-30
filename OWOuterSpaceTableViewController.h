@@ -13,7 +13,6 @@
 @interface OWOuterSpaceTableViewController : UITableViewController <OWAddSpaceObjectViewControllerDelegate>
 
 @property (strong, nonatomic) NSMutableArray *planets;
-@property (strong, nonatomic)OWSpaceObject *spaceObject;
 @property (strong, nonatomic) NSMutableArray *addedSpaceObjects;
 
 

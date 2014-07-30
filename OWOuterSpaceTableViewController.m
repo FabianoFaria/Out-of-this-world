@@ -81,7 +81,7 @@
             NSIndexPath *path = [self.tableView indexPathForCell:sender];
             OWSpaceObject *selectedObject = self.planets[path.row];
             //nextViewController.imageView.image = selectedObject.spaceImage;
-            nextViewController.spaceObject = selectedObject;
+            //nextViewController.spaceObject = selectedObject;
         }
         
     }
@@ -115,19 +115,30 @@
 -(void)didCancel
 {
     NSLog(@"didCancel");
-    //[self dismissViewControllerAnimated:YES completion:nil];
+    [self dismissViewControllerAnimated:YES completion:nil];
 }
-
 -(void)addSpaceObject:(OWSpaceObject *)spaceObject
 {
+    if(!self.addedSpaceObjects)
+    {
+        self.addedSpaceObjects = [[NSMutableArray alloc] init];
+    }
+    [self.addedSpaceObjects addObject:spaceObject];
+    
+    NSLog(@"addSpaceObject");
+    [self dismissViewControllerAnimated:YES completion:nil];
+    
+}
+
+//-(void)addSpaceObject
+//{
 //    if(!self.addedSpaceObjects)
 //    {
 //        self.addedSpaceObjects = [[NSMutableArray alloc] init];
 //    }
 //    [self.addedSpaceObjects addObject:spaceObject];
-    NSLog(@"addSpaceCancel");
-    //[self dismissViewControllerAnimated:YES completion:nil];
-}
+//    
+//}
 
 
 #pragma mark - Table view data source
@@ -137,7 +148,7 @@
 #warning Potentially incomplete method implementation.
     // Return the number of sections.
     
-    if ([ self.addedSpaceObjects count])
+    if ([self.addedSpaceObjects count])
     {
         return 2;
     } else

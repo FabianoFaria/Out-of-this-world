@@ -79,9 +79,32 @@
 
 
 
-- (IBAction)addButtomPress:(UIButton *)sender {
+- (IBAction)addButtomPress:(UIButton *)sender
+{
+    
+    OWSpaceObject *newSpaceObject = [self returnNewSpaceObject];
+    [self.delegate addSpaceObject:newSpaceObject];
 }
 
-- (IBAction)cancelButtomPress:(UIButton *)sender {
+- (IBAction)cancelButtomPress:(UIButton *)sender
+{
+    [self.delegate didCancel];
+    
 }
+
+-(OWSpaceObject *)returnNewSpaceObject
+{
+    OWSpaceObject *addedSpaceObject = [[OWSpaceObject alloc] init];
+    
+        addedSpaceObject.name = self.nameTextField.text;
+        addedSpaceObject.nickname = self.nickNameTextField.text;
+        addedSpaceObject.diameter = [self.diameterTextField.text floatValue];
+        addedSpaceObject.temperature = [self.temperatureTextField.text floatValue];
+        addedSpaceObject.numberOfMons = [self.moonsNumber.text integerValue];
+        addedSpaceObject.interestFact = self.interestingFact.text;
+    
+        return addedSpaceObject;
+
+}
+
 @end
