@@ -128,6 +128,8 @@
     NSLog(@"addSpaceObject");
     [self dismissViewControllerAnimated:YES completion:nil];
     
+    [self.tableView reloadData];
+    
 }
 
 //-(void)addSpaceObject
@@ -181,6 +183,13 @@
     if( indexPath.section == 1)
     {
         //Use new Space object to custumize our cell
+        
+        OWSpaceObject *planet = [self.addedSpaceObjects objectAtIndex:indexPath.row];
+        cell.textLabel.text = planet.name;
+        cell.detailTextLabel.text = planet.nickname;
+        cell.imageView.image = planet.spaceImage;
+        
+        
     } else
     {
         OWSpaceObject *planet = [self.planets objectAtIndex:indexPath.row];
