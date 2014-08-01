@@ -18,6 +18,27 @@
 
 @implementation OWOuterSpaceTableViewController
 
+#pragma mark - Lazy Instatiation os properties
+
+-(NSMutableArray *)planets
+{
+    if(!_planets)
+    {
+        _planets = [[NSMutableArray alloc] init];
+    }
+    return _planets;
+}
+
+-(NSMutableArray *)addedSpaceObjects
+{
+    if(!_addedSpaceObjects)
+    {
+        _addedSpaceObjects = [[NSMutableArray alloc] init];
+    }
+    return  _addedSpaceObjects;
+    
+}
+
 - (id)initWithStyle:(UITableViewStyle)style
 {
     self = [super initWithStyle:style];
@@ -32,10 +53,7 @@
     [super viewDidLoad];
     
     
-    self.planets = [[NSMutableArray alloc] init];
- 
-    
-    self.planets = [[NSMutableArray alloc] init];
+    //self.planets = [[NSMutableArray alloc] init];
     
   for (NSMutableDictionary *planetData in [AstronomicalData allKnownPlanets] )
   {
@@ -79,7 +97,17 @@
         {
             OWOuterSpaceTableViewController *nextViewController = segue.destinationViewController;
             NSIndexPath *path = [self.tableView indexPathForCell:sender];
-            OWSpaceObject *selectedObject = self.planets[path.row];
+            OWSpaceObject *selectedObject;
+            
+            if(path.section == 0)
+            {
+                selectedObject = self.planets[path.row];
+            }
+            else if (path.section == 1)
+            {
+                selectedObject = self.addedSpaceObjects[path.row];
+            }
+            
             //nextViewController.imageView.image = selectedObject.spaceImage;
             //nextViewController.spaceObject = selectedObject;
         }
@@ -91,7 +119,17 @@
         {
             OWSpaceDataViewController *targetViewController = segue.destinationViewController;
             NSIndexPath *path = sender;
-            OWSpaceObject *selectedObject = self.planets[path.row];
+            OWSpaceObject *selectedObject;
+            
+            if(path.section == 0)
+            {
+                selectedObject = self.planets[path.row];
+            }
+            else if (path.section == 1)
+            {
+                selectedObject = self.addedSpaceObjects[path.row];
+            }
+            
             targetViewController.spaceObject = selectedObject;
         }
     }
@@ -119,10 +157,6 @@
 }
 -(void)addSpaceObject:(OWSpaceObject *)spaceObject
 {
-    if(!self.addedSpaceObjects)
-    {
-        self.addedSpaceObjects = [[NSMutableArray alloc] init];
-    }
     [self.addedSpaceObjects addObject:spaceObject];
     
     NSLog(@"addSpaceObject");
