@@ -17,6 +17,8 @@
 @end
 
 @implementation OWOuterSpaceTableViewController
+#define ADDED_SPACE_OBJECTS_KEY @"Added Space Object Array"
+
 
 #pragma mark - Lazy Instatiation os properties
 
@@ -159,11 +161,34 @@
 {
     [self.addedSpaceObjects addObject:spaceObject];
     
-    NSLog(@"addSpaceObject");
+    //Vai salvar para NSUserDefault aqui...
+    NSMutableArray *spaceObjectsAsPropertyLists = [[[NSUserDefaults standardUserDefaults] arrayForKey:ADDED_SPACE_OBJECTS_KEY]mutableCopy];
+    if(!spaceObjectsAsPropertyLists)
+        spaceObjectsAsPropertyLists = [[NSMutableArray alloc]init];
+    
+    [spaceObjectsAsPropertyLists addObject:[self spaceObjectAsAPpropertyList:spaceObject]];
+    
+    [[NSUserDefaults standardUserDefaults] setObject:spaceObjectsAsPropertyLists forKey:ADDED_SPACE_OBJECTS_KEY];
+    
+    [[NSUserDefaults standardUserDefaults] synchronize];
+    
     [self dismissViewControllerAnimated:YES completion:nil];
     
     [self.tableView reloadData];
     
+}
+
+# pragma mark - Helper Methods
+
+-(NSDictionary *)spaceObjectAsAPpropertyList:(OWSpaceObject *)spaceObject
+{
+    NSData *imageData = UIImagePNGRepresentation(spaceObject.spaceImage);
+    NSDictionary *dictionary = @{PLANET_NAME : spaceObject.name, PLANET_GRAVITY : @(spaceObject.gravitationalForce),
+                                 PLANET_DIAMETER : @(spaceObject.diameter), PLANET_YEAR_LENGTH : @(spaceObject.yearLength),
+                                 PLANET_DAY_LENGTH : @(spaceObject.dayLength), PLANET_TEMPERATURE : @(spaceObject.temperature),
+                                 PLANET_NUMBER_OF_MOONS : @(spaceObject.numberOfMons), PLANET_NICKNAME : spaceObject.nickname, PLANET_INTERESTING_FACT : spaceObject.interestFact, PLANET_IMAGE : imageData };
+    
+    return dictionary;
 }
 
 //-(void)addSpaceObject
