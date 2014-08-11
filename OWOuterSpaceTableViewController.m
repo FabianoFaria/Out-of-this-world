@@ -65,17 +65,12 @@
       
   }
     
-//    NSMutableDictionary *myDictionary = [[NSMutableDictionary alloc] init];
-//    NSString *firstColor = @"red";
-//    [myDictionary setObject:firstColor forKey:@"firetruck color"];
-//    [myDictionary setObject:@"blue" forKey:@"oceanColor"];
-//    [myDictionary setObject:@"yellow" forKey:@"star color"];
-//    
-//    NSLog(@"%@", myDictionary);
-//    
-//    NSString *blueString = [myDictionary objectForKey:@"star color"];
-//    NSLog(@"%@", blueString);
-    
+    NSArray *myPlanetsAsPropertyList = [[NSUserDefaults standardUserDefaults] arrayForKey:ADDED_SPACE_OBJECTS_KEY];
+    for(NSDictionary *dictionary in myPlanetsAsPropertyList)
+    {
+        OWSpaceObject *spaceObject = [self spaceObjectForDictionary:dictionary];
+        [self.addedSpaceObjects addObject:spaceObject];
+    }
     
     NSNumber *myNumber = [NSNumber numberWithInt:5];
     NSLog(@"%@", myNumber);
@@ -191,16 +186,14 @@
     return dictionary;
 }
 
-//-(void)addSpaceObject
-//{
-//    if(!self.addedSpaceObjects)
-//    {
-//        self.addedSpaceObjects = [[NSMutableArray alloc] init];
-//    }
-//    [self.addedSpaceObjects addObject:spaceObject];
-//    
-//}
-
+-(OWSpaceObject *)spaceObjectForDictionary:(NSDictionary *)dictionary
+{
+    NSData *dataForImage = dictionary[PLANET_IMAGE];
+    UIImage *spaceObjectImage = [UIImage imageWithData:dataForImage];
+    OWSpaceObject *spaceObject = [[OWSpaceObject alloc] initWithData:dictionary andImage:spaceObjectImage];
+    
+    return spaceObject;
+}
 
 #pragma mark - Table view data source
 
@@ -270,27 +263,37 @@
 {
     [self performSegueWithIdentifier:@"push to space data" sender:indexPath];
 }
-/*
+
 // Override to support conditional editing of the table view.
 - (BOOL)tableView:(UITableView *)tableView canEditRowAtIndexPath:(NSIndexPath *)indexPath
 {
-    // Return NO if you do not want the specified item to be editable.
-    return YES;
+    if(indexPath.section == 1) return YES;
+    else return NO;
 }
-*/
 
-/*
+
+
 // Override to support editing the table view.
 - (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath
 {
     if (editingStyle == UITableViewCellEditingStyleDelete) {
         // Delete the row from the data source
+        [self.addedSpaceObjects removeObjectAtIndex:indexPath.row];
+        
+        NSMutableArray *newSavedObjectData = [[NSMutableArray alloc] init];
+        for(OWSpaceObject *spaceObject in self.addedSpaceObjects)
+        {
+            [newSavedObjectData addObject:[self spaceObjectAsAPpropertyList:spaceObject]];
+        }
+        [[NSUserDefaults standardUserDefaults] setObject:newSavedObjectData forKey:ADDED_SPACE_OBJECTS_KEY];
+        [[NSUserDefaults standardUserDefaults] synchronize];
+        
         [tableView deleteRowsAtIndexPaths:@[indexPath] withRowAnimation:UITableViewRowAnimationFade];
     } else if (editingStyle == UITableViewCellEditingStyleInsert) {
         // Create a new instance of the appropriate class, insert it into the array, and add a new row to the table view
     }   
 }
-*/
+
 
 /*
 // Override to support rearranging the table view.
